@@ -1,0 +1,9 @@
+[
+  {
+    "name": "undercover",
+    "description": "Operate without revealing AI identity. Use when the user requests undercover mode, asks to contribute without AI attribution, or wants to work anonymously on a project. Strips all AI attribution from commits, PRs, code comments, and public-facing text.",
+    "repo": "kumekay/skills-",
+    "repoUrl": "https://github.com/kumekay/skills-",
+    "installCommand": "npx skills add git@github.com:kumekay/skills-.git --skill undercover"
+  }
+]
