@@ -7,7 +7,8 @@ A static web index that aggregates agent skills from multiple Git repositories i
 - Crawls skill repositories listed in `sources.json` and builds a `public/skills.json` index
 - Single-page frontend with instant client-side search — no server required
 - One-click copy of `npx skills add ...` install commands
-- Docker image for zero-config deployment
+- Automatic deployment to GitHub Pages on every push to `main`
+- Docker image for zero-config self-hosted deployment
 
 ## Quick start
 
@@ -43,6 +44,16 @@ name: my-skill
 description: What this skill does.
 ---
 ```
+
+## GitHub Pages
+
+The site is automatically crawled and deployed to GitHub Pages on every push to `main` via the [deploy workflow](.github/workflows/deploy.yml).
+
+To enable it in your fork:
+1. Go to **Settings → Pages** and set the source to **GitHub Actions**.
+2. Push to `main` — the workflow will crawl `sources.json`, build `public/`, and publish the site.
+
+The live URL will be `https://<owner>.github.io/<repo>/`.
 
 ## Docker
 
