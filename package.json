@@ -1,0 +1,15 @@
+{
+  "name": "skills-registry",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Aggregates agent skills from multiple repositories into a searchable web index",
+  "scripts": {
+    "crawl": "node crawler/index.js",
+    "test": "vitest run",
+    "lint": "eslint crawler tests"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "vitest": "^1.6.0"
+  }
+}

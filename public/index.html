@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Skills Registry</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f1117;
+      color: #e1e4e8;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f0f6fc;
+      margin-bottom: 0.4rem;
+    }
+
+    header p.subtitle {
+      color: #8b949e;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    #search {
+      width: 100%;
+      max-width: 520px;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #e1e4e8;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #search:focus { border-color: #58a6ff; }
+    #search::placeholder { color: #484f58; }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    #count {
+      color: #8b949e;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.15s;
+    }
+
+    .skill-card:hover { border-color: #58a6ff; }
+
+    .skill-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    .skill-name:hover { text-decoration: underline; }
+
+    .skill-repo {
+      font-size: 0.8rem;
+      color: #8b949e;
+      background: #21262d;
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+    }
+
+    .skill-description {
+      color: #c9d1d9;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 0.85rem;
+    }
+
+    .install-block {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+    }
+
+    .install-block code {
+      flex: 1;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.85rem;
+      color: #7ee787;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .copy-btn {
+      flex-shrink: 0;
+      background: none;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      color: #8b949e;
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .copy-btn:hover { color: #e1e4e8; border-color: #8b949e; }
+    .copy-btn.copied { color: #7ee787; border-color: #7ee787; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #484f58;
+    }
+
+    .empty-state svg { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🧠 Agent Skills Registry</h1>
+  <p class="subtitle">Discover and install agent skills for AI coding assistants</p>
+  <input
+    type="search"
+    id="search"
+    placeholder="Search skills by name or description…"
+    autocomplete="off"
+    spellcheck="false"
+  />
+</header>
+
+<main>
+  <p id="count"></p>
+  <div id="skills-list"></div>
+</main>
+
+<script>
+  let allSkills = [];
+
+  async function loadSkills() {
+    const res = await fetch('skills.json');
+    if (!res.ok) throw new Error(`Failed to load skills.json: ${res.status}`);
+    return res.json();
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderSkill(skill) {
+    return `
+      <div class="skill-card">
+        <div class="skill-header">
+          <a class="skill-name" href="${escapeHtml(skill.repoUrl)}" target="_blank" rel="noopener noreferrer">
+            ${escapeHtml(skill.name)}
+          </a>
+          <span class="skill-repo">${escapeHtml(skill.repo)}</span>
+        </div>
+        <p class="skill-description">${escapeHtml(skill.description)}</p>
+        <div class="install-block">
+          <code id="cmd-${escapeHtml(skill.name)}">${escapeHtml(skill.installCommand)}</code>
+          <button class="copy-btn" data-cmd="${escapeHtml(skill.installCommand)}">copy</button>
+        </div>
+      </div>`;
+  }
+
+  function renderList(skills) {
+    const list = document.getElementById('skills-list');
+    const count = document.getElementById('count');
+
+    if (skills.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <p>No skills match your search.</p>
+        </div>`;
+      count.textContent = '';
+    } else {
+      list.innerHTML = skills.map(renderSkill).join('');
+      count.textContent = `${skills.length} skill${skills.length !== 1 ? 's' : ''}`;
+    }
+  }
+
+  function filterSkills(query) {
+    if (!query.trim()) return allSkills;
+    const q = query.toLowerCase();
+    return allSkills.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q) ||
+        s.repo.toLowerCase().includes(q)
+    );
+  }
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    renderList(filterSkills(e.target.value));
+  });
+
+  document.getElementById('skills-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    navigator.clipboard.writeText(btn.dataset.cmd).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+
+  loadSkills()
+    .then((skills) => {
+      allSkills = skills;
+      renderList(allSkills);
+    })
+    .catch((err) => {
+      document.getElementById('skills-list').innerHTML =
+        `<div class="empty-state"><p>Failed to load skills: ${escapeHtml(err.message)}</p></div>`;
+    });
+</script>
+</body>
+</html>
