@@ -4,166 +4,163 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Agent Skills Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --accent: #c2553d;
+      --ink:    #1a1714;
+      --mute:   #9b938a;
+      --faint:  #c4bdb3;
+      --bg:     #ffffff;
+      --serif:  "Source Serif 4", Georgia, serif;
+      --mono:   "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0f1117;
-      color: #e1e4e8;
+      font-family: var(--serif);
+      background: var(--bg);
+      color: var(--ink);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    header {
-      background: #161b22;
-      border-bottom: 1px solid #30363d;
-      padding: 2rem 1rem;
-      text-align: center;
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 88px 32px 120px;
     }
 
-    header h1 {
-      font-size: 2rem;
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
       font-weight: 700;
-      color: #f0f6fc;
-      margin-bottom: 0.4rem;
+      margin-bottom: 16px;
     }
 
-    header p.subtitle {
-      color: #8b949e;
-      font-size: 1rem;
-      margin-bottom: 1.2rem;
+    h1.title {
+      font-family: var(--serif);
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 22px;
     }
 
     #search {
+      display: block;
       width: 100%;
-      max-width: 520px;
-      padding: 0.6rem 1rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #30363d;
-      background: #0d1117;
-      color: #e1e4e8;
+      border: none;
       outline: none;
-      transition: border-color 0.15s;
+      background: transparent;
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--mute);
+      caret-color: var(--accent);
+      padding: 0;
+      margin-bottom: 56px;
     }
+    #search::placeholder { color: var(--faint); opacity: 1; }
 
-    #search:focus { border-color: #58a6ff; }
-    #search::placeholder { color: #484f58; }
-
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    #count {
-      color: #8b949e;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-    }
-
-    .skill-card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 1.2rem 1.4rem;
-      margin-bottom: 1rem;
-      transition: border-color 0.15s;
-    }
-
-    .skill-card:hover { border-color: #58a6ff; }
-
-    .skill-header {
+    #skills-list {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
+      flex-direction: column;
+      gap: 46px;
     }
 
     .skill-name {
-      font-size: 1.1rem;
+      display: block;
+      font-family: var(--serif);
+      font-size: 44px;
       font-weight: 600;
-      color: #58a6ff;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      color: var(--ink);
       text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.15s;
+      margin-bottom: 14px;
     }
-
-    .skill-name:hover { text-decoration: underline; }
+    .skill-name:hover { color: var(--accent); }
 
     .skill-repo {
-      font-size: 0.8rem;
-      color: #8b949e;
-      background: #21262d;
-      padding: 0.15rem 0.5rem;
-      border-radius: 12px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--faint);
+      margin-left: 14px;
+      letter-spacing: 0;
+      white-space: nowrap;
     }
 
     .skill-description {
-      color: #c9d1d9;
-      font-size: 0.95rem;
+      font-size: 16.5px;
       line-height: 1.5;
-      margin-bottom: 0.85rem;
+      color: var(--mute);
+      max-width: 440px;
+      margin-bottom: 14px;
+      text-wrap: pretty;
     }
 
-    .install-block {
+    .install {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      padding: 0.5rem 0.8rem;
+      gap: 16px;
     }
 
-    .install-block code {
-      flex: 1;
-      font-family: "SFMono-Regular", Consolas, monospace;
-      font-size: 0.85rem;
-      color: #7ee787;
+    .install code {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 420px;
     }
 
     .copy-btn {
       flex-shrink: 0;
+      border: none;
       background: none;
-      border: 1px solid #30363d;
-      border-radius: 4px;
-      color: #8b949e;
+      padding: 0;
       cursor: pointer;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.5rem;
-      transition: color 0.15s, border-color 0.15s;
+      font-family: var(--serif);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--mute);
+      transition: color 0.15s;
     }
-
-    .copy-btn:hover { color: #e1e4e8; border-color: #8b949e; }
-    .copy-btn.copied { color: #7ee787; border-color: #7ee787; }
+    .copy-btn:hover { color: var(--ink); }
+    .copy-btn.copied { color: var(--accent); }
 
     .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #484f58;
+      padding-top: 24px;
+      color: var(--faint);
+      font-size: 16px;
     }
-
-    .empty-state svg { margin-bottom: 1rem; }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>🧠 Agent Skills Registry</h1>
-  <p class="subtitle">Discover and install agent skills for AI coding assistants</p>
+<main class="wrap">
+  <p class="eyebrow" id="count">type to filter</p>
+  <h1 class="title">Skills Registry</h1>
   <input
     type="search"
     id="search"
-    placeholder="Search skills by name or description…"
+    placeholder="Search the registry"
     autocomplete="off"
     spellcheck="false"
   />
-</header>
-
-<main>
-  <p id="count"></p>
   <div id="skills-list"></div>
 </main>
 
@@ -186,17 +183,12 @@
 
   function renderSkill(skill) {
     return `
-      <div class="skill-card">
-        <div class="skill-header">
-          <a class="skill-name" href="${escapeHtml(skill.repoUrl)}" target="_blank" rel="noopener noreferrer">
-            ${escapeHtml(skill.name)}
-          </a>
-          <span class="skill-repo">${escapeHtml(skill.repo)}</span>
-        </div>
+      <div class="skill">
+        <a class="skill-name" href="${escapeHtml(skill.repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(skill.name)}<span class="skill-repo">${escapeHtml(skill.repo)}</span></a>
         <p class="skill-description">${escapeHtml(skill.description)}</p>
-        <div class="install-block">
-          <code id="cmd-${escapeHtml(skill.name)}">${escapeHtml(skill.installCommand)}</code>
-          <button class="copy-btn" data-cmd="${escapeHtml(skill.installCommand)}">copy</button>
+        <div class="install">
+          <code>${escapeHtml(skill.installCommand)}</code>
+          <button class="copy-btn" data-cmd="${escapeHtml(skill.installCommand)}">Copy</button>
         </div>
       </div>`;
   }
@@ -206,17 +198,11 @@
     const count = document.getElementById('count');
 
     if (skills.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <p>No skills match your search.</p>
-        </div>`;
-      count.textContent = '';
+      list.innerHTML = `<div class="empty-state">Nothing matches.</div>`;
+      count.textContent = 'type to filter';
     } else {
       list.innerHTML = skills.map(renderSkill).join('');
-      count.textContent = `${skills.length} skill${skills.length !== 1 ? 's' : ''}`;
+      count.textContent = `${skills.length} skill${skills.length !== 1 ? 's' : ''} · type to filter`;
     }
   }
 
@@ -239,10 +225,10 @@
     const btn = e.target.closest('.copy-btn');
     if (!btn) return;
     navigator.clipboard.writeText(btn.dataset.cmd).then(() => {
-      btn.textContent = 'copied!';
+      btn.textContent = 'Copied';
       btn.classList.add('copied');
       setTimeout(() => {
-        btn.textContent = 'copy';
+        btn.textContent = 'Copy';
         btn.classList.remove('copied');
       }, 2000);
     });
@@ -255,7 +241,7 @@
     })
     .catch((err) => {
       document.getElementById('skills-list').innerHTML =
-        `<div class="empty-state"><p>Failed to load skills: ${escapeHtml(err.message)}</p></div>`;
+        `<div class="empty-state">Failed to load skills: ${escapeHtml(err.message)}</div>`;
     });
 </script>
 </body>
