@@ -119,9 +119,9 @@
       font-family: var(--mono);
       font-size: 13px;
       color: var(--accent);
-      overflow-wrap: anywhere;
       max-width: 440px;
     }
+    .install code span { white-space: nowrap; }
 
     .copy-btn {
       flex-shrink: 0;
@@ -179,13 +179,22 @@
       .replace(/"/g, '&quot;');
   }
 
+  // Wrap each token in a nowrap span so the command only breaks at spaces,
+  // not at hyphens inside flags like --skill.
+  function renderCommand(cmd) {
+    return cmd
+      .split(' ')
+      .map((token) => `<span>${escapeHtml(token)}</span>`)
+      .join(' ');
+  }
+
   function renderSkill(skill) {
     return `
       <div class="skill">
         <a class="skill-name" href="${escapeHtml(skill.repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(skill.name)}<span class="skill-repo">${escapeHtml(skill.repo)}</span></a>
         <p class="skill-description">${escapeHtml(skill.description)}</p>
         <div class="install">
-          <code>${escapeHtml(skill.installCommand)}</code>
+          <code>${renderCommand(skill.installCommand)}</code>
           <button class="copy-btn" data-cmd="${escapeHtml(skill.installCommand)}">Copy</button>
         </div>
       </div>`;
