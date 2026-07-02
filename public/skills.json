@@ -5,5 +5,33 @@
     "repo": "kumekay/skills-",
     "repoUrl": "https://github.com/kumekay/skills-",
     "installCommand": "npx skills add git@github.com:kumekay/skills-.git --skill undercover"
+  },
+  {
+    "name": "using-cloner",
+    "description": "Use the `clone` CLI instead of `git clone` whenever you need to clone a repo or get the local directory of an existing checkout.",
+    "repo": "kumekay/skills-",
+    "repoUrl": "https://github.com/kumekay/skills-",
+    "installCommand": "npx skills add git@github.com:kumekay/skills-.git --skill using-cloner"
+  },
+  {
+    "name": "using-tea-for-gitea",
+    "description": "Use `tea` CLI for all interactions with Gitea instances, including repositories, issues, pull requests, actions, releases, labels, milestones, and branches. Use when the user mentions a Gitea host, shares a Gitea URL, asks about Gitea repos, or wants to create/manage issues, PRs, or actions on Gitea. Also use when the current git remote points to a Gitea host. Prefer `tea` over browser tools or generic web fetching for any Gitea data.",
+    "repo": "kumekay/skills-",
+    "repoUrl": "https://github.com/kumekay/skills-",
+    "installCommand": "npx skills add git@github.com:kumekay/skills-.git --skill using-tea-for-gitea"
+  },
+  {
+    "name": "using-clikunja",
+    "description": "Use `clikunja` CLI for all interactions with Vikunja TODO instances — projects, tasks, labels, comments, and raw API access. Use when the user mentions Vikunja, shares a Vikunja URL, or asks to list/create/update tasks, projects, labels, or comments on a Vikunja host. Prefer `clikunja` over browser automation or generic HTTP fetching for any Vikunja data.",
+    "repo": "kumekay/clikunja",
+    "repoUrl": "https://github.com/kumekay/clikunja",
+    "installCommand": "npx skills add git@github.com:kumekay/clikunja.git --skill using-clikunja"
+  },
+  {
+    "name": "share-with-discarica",
+    "description": "Share HTML or Markdown files as web pages via discarica and get back a sharable link, or read pages back (agent-to-agent handover notes). Use when the user asks to share a report, publish a page, send someone an HTML/Markdown document, get a link for a generated file, or leave/read notes for another agent.",
+    "repo": "kumekay/discarica",
+    "repoUrl": "https://github.com/kumekay/discarica",
+    "installCommand": "npx skills add git@github.com:kumekay/discarica.git --skill share-with-discarica"
   }
 ]

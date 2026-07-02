@@ -24,9 +24,28 @@ export async function buildSkillsIndex(sources, { fetchRepoContents, fetchFileCo
 
     const dirs = contents.filter((item) => item.type === 'dir');
 
+    // Skills live either in top-level directories or under a skills/ directory.
+    const skillDirPaths = [];
     for (const dir of dirs) {
+      if (dir.name === 'skills') {
+        try {
+          const nested = await fetchRepoContents(owner, repoName, 'skills');
+          for (const item of nested) {
+            if (item.type === 'dir') {
+              skillDirPaths.push(`skills/${item.name}`);
+            }
+          }
+        } catch (err) {
+          console.error(`Failed to fetch skills/ of ${repo}: ${err.message}`);
+        }
+      } else {
+        skillDirPaths.push(dir.name);
+      }
+    }
+
+    for (const dirPath of skillDirPaths) {
       try {
-        const skillMdPath = `${dir.name}/SKILL.md`;
+        const skillMdPath = `${dirPath}/SKILL.md`;
         const content = await fetchFileContent(owner, repoName, skillMdPath);
         const data = extractSkillData(content);
         if (data) {
